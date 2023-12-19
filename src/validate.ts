@@ -1,100 +1,19 @@
-import { CHARACTER_ID_WORD } from "./constants";
+import { ACTOR_MEMBER, CHARACTER, ENEMY_MEMBER } from "./constants";
 import {
+  ArgValue,
   FromTo,
   JSXObject,
+  MapPosition,
+  DirectOrVariables,
   ReactElementObject,
   Selector,
+  Sound,
   SwitchId,
   VariableId,
+  Color4,
+  Color3,
 } from "./type";
 
-// export const checkInt = (value: number) => {
-//   if (value % 1 !== 0) {
-//     throw new Error(`値は整数である必要があります。`);
-//   }
-//   return value;
-// };
-
-// export const checkIntOne = (value: number) => {
-//   checkInt(value);
-//   if (value < 1) {
-//     throw new Error(`値は 1 以上である必要があります。`);
-//   }
-//   return value;
-// };
-
-// export const checkIntRange = (value: number, min: number, max: number) => {
-//   checkInt(value);
-//   if (!(min <= value && value <= max)) {
-//     throw new Error(`値は ${min} ～ ${max} の間の値である必要があります。`);
-//   }
-//   return value;
-// };
-
-// export const checkIntRangeWithWord = (
-//   value: number | string,
-//   min: number,
-//   max: number,
-//   wordDictionaly: Record<string, string>
-// ) => {
-//   if (typeof value === "number") {
-//     checkIntRange(value, min, max);
-//   } else {
-//     if (wordDictionaly) {
-//       const keys = Object.keys(wordDictionaly);
-//       if (!keys.includes(value)) {
-//         throw new Error(`対応している文字列ではありません。${keys.join(", ")}`);
-//       }
-//     }
-//   }
-//   return value;
-// };
-
-// export const checkId = (value: number) => checkIntOne(value);
-// export const checkEnemyIndex = (value: number) => checkIntRange(value, 1, 8);
-
-// export const checkIdWithWord = (
-//   value: number | string,
-//   wordDictionaly: Record<string, string>
-// ) => {
-//   if (typeof value === "number") {
-//     checkId(value);
-//   } else {
-//     if (wordDictionaly) {
-//       const keys = Object.keys(wordDictionaly);
-//       if (!keys.includes(value)) {
-//         throw new Error(`対応している文字列ではありません。${keys.join(", ")}`);
-//       }
-//     }
-//   }
-//   return value;
-// };
-
-// export const idRange = (variableId: number | { from: number; to: number }) =>
-//   typeof variableId === "number"
-//     ? checkId(variableId)
-//     : [checkId(variableId.from), checkId(variableId.to)].join("-");
-
-// export const valueOrVariable = (value: number | { variableId: number }) =>
-//   typeof value === "number"
-//     ? checkInt(value)
-//     : `V[${checkId(value.variableId)}]`;
-
-// export const valueOrVariableWithWord = (
-//   value: number | { variableId: number } | string,
-//   wordDictionaly: Record<string, string>
-// ) => {
-//   if (typeof value !== "string") {
-//     return valueOrVariable(value);
-//   }
-//   const keys = Object.keys(wordDictionaly);
-//   if (!keys.includes(value)) {
-//     throw new Error(`対応している文字列ではありません。${keys.join(", ")}`);
-//   }
-//   return value;
-// };
-
-type ArgValue = number | VariableId | SwitchId | FromTo | string | boolean;
 export const arg = <V extends ArgValue>(
   value: V,
   converter: (
@@ -107,15 +26,22 @@ export const arg = <V extends ArgValue>(
         value: keyof P,
         preset: P
       ) => string;
+      markMapPosition: (v: MapPosition, mode: DirectOrVariables) => string;
+      markSoundArgs: (v: Sound) => string;
+      markColorTone: (v: Color3 | Color4) => string;
+      markColorArgs: (v: Color3 | Color4) => string;
       //
       validInt: (v: number) => number;
       validRange: (v: number, min: number, max: number) => number;
       validOne: (v: number) => number;
       validId: (v: number) => number;
       //
-      isVariableId: (v: Selector | number) => v is VariableId;
-      isSwitchId: (v: Selector | number) => v is SwitchId;
-      isFromTo: (v: Selector | number) => v is FromTo;
+      isVariableId: (v: unknown) => v is VariableId;
+      isSwitchId: (v: unknown) => v is SwitchId;
+      isFromTo: (v: unknown) => v is FromTo;
+      isMapPosition: (v: unknown) => v is MapPosition;
+      isSound: (v: unknown) => v is Sound;
+      isColor: (v: unknown) => v is Color3 | Color4;
     }
   ) => string | number | boolean
 ): string => {
@@ -137,37 +63,79 @@ export const arg = <V extends ArgValue>(
     markSwitchId: (v) => `SW[${v.switchId}]`,
     markFromTo: (v) => `${v.from}-${v.to}`,
     markPreset: (v, p) => p[v],
+    markMapPosition: (v, mode) =>
+      `${mode === "DIRECT" ? "Direct" : "WithVariables"}[${v.id}][${v.x}][${
+        v.y
+      }]`,
+    markSoundArgs: (v) =>
+      joinKeep(null, [v.name ?? "None", v.volume, v.pitch, v.pan]),
+    markColorTone: (v) =>
+      `ColorTone[${v.r}][${v.g}][${v.b}]${
+        (v as Color4)?.x ? `[${(v as Color4).x}]` : ""
+      }`,
+    markColorArgs: (v) => joinSkip(null, [v.r, v.g, v.b, (v as Color4)?.x]),
     //
     validInt,
     validRange: (v, min, max) => range(validInt(v), min, max),
     validOne,
     validId: validOne,
     //
-    isVariableId: (v: Selector | number): v is VariableId => {
+    isVariableId: (v: unknown): v is VariableId => {
       if (typeof v === "number") return false;
       return !!(v as Partial<VariableId>)?.variableId;
     },
-    isSwitchId: (v: Selector | number): v is SwitchId => {
+    isSwitchId: (v: unknown): v is SwitchId => {
       if (typeof v === "number") return false;
       return !!(v as Partial<SwitchId>)?.switchId;
     },
-    isFromTo: (v: Selector | number): v is FromTo => {
+    isFromTo: (v: unknown): v is FromTo => {
       if (typeof v === "number") return false;
-      return !!(v as Partial<FromTo>)?.from;
+      return !!(v as Partial<FromTo>)?.from && !!(v as Partial<FromTo>)?.to;
+    },
+    isMapPosition: (v: unknown): v is MapPosition => {
+      if (typeof v === "number") return false;
+      return (
+        !!(v as Partial<MapPosition>)?.id &&
+        !!(v as Partial<MapPosition>)?.x &&
+        !!(v as Partial<MapPosition>)?.y
+      );
+    },
+    isSound: (v: unknown): v is Sound => {
+      if (typeof v === "number") return false;
+      return (
+        !!(v as Partial<Sound>)?.name &&
+        !!(v as Partial<Sound>)?.volume &&
+        !!(v as Partial<Sound>)?.pitch &&
+        !!(v as Partial<Sound>)?.pan
+      );
+    },
+    isColor: (v: unknown): v is Color3 | Color4 => {
+      if (typeof v === "number") return false;
+      return (
+        !!(v as Partial<Color4>)?.r &&
+        !!(v as Partial<Color4>)?.g &&
+        !!(v as Partial<Color4>)?.b
+      );
     },
   })}`;
 };
 
-export const join = (delim: string | null, arr: (JSXObject | undefined)[]) =>
-  arr.filter((x) => x !== undefined).join(delim ?? ", ");
+export const joinKeep = (
+  delim: string | null,
+  arr: (JSXObject | undefined)[]
+) => arr.join(delim ?? ", ");
+export const joinSkip = (
+  delim: string | null,
+  arr: (JSXObject | undefined)[]
+) => arr.filter((x) => x !== undefined).join(delim ?? ", ");
 
 export const tag = (
   name: string,
   arg?: (JSXObject | undefined)[],
   textChildren?: string | string[]
 ) => {
-  const args = join(null, arg ?? []);
-  return join("\n", [
+  const args = joinKeep(null, arg ?? []);
+  return joinSkip("\n", [
     args !== "" ? `<${name}: ${args}>` : `<${name}>`,
     ...(textChildren
       ? [
@@ -183,12 +151,56 @@ export const argId = (v: number) => arg(v, (v, t) => t.validOne(v));
 export const argEnemyIndex = (v: number) =>
   arg(v, (v, t) => t.validRange(v, 1, 8));
 
-export const argCharacterIdWithPreset = (
-  v: keyof typeof CHARACTER_ID_WORD | number
+export const argPreset = <P extends Record<string, string>>(
+  v: string,
+  preset: P
+) => arg(v, (v, t) => t.markPreset(v, preset));
+export const argNumberPreset = <P extends Record<string, string>>(
+  v: number | string,
+  preset: P,
+  isId?: boolean
 ) =>
   arg(v, (v, t) =>
-    typeof v === "number" ? t.validId(v) : t.markPreset(v, CHARACTER_ID_WORD)
+    typeof v === "number"
+      ? isId
+        ? t.validId(v)
+        : t.validInt(v)
+      : t.markPreset(v, preset)
   );
+export const argRange = (v: number, range: FromTo) =>
+  arg(v, (v, t) => t.validRange(v, range.from, range.to));
+
+export const createPresetArg = <P extends Record<string, string>>(
+  preset: P
+) => {
+  return (v: ArgValue) =>
+    arg(v, (v, t) =>
+      typeof v === "number" ? t.validId(v) : t.markPreset(v as keyof P, preset)
+    );
+};
+
+export const createPresetArgWithVariableId =
+  <P extends Record<string, string>>(preset: P, range?: FromTo) =>
+  (v: ArgValue) =>
+    arg(v, (v, t) => {
+      if (typeof v === "string")
+        return t.markPreset(v as keyof typeof preset, preset);
+      if (t.isVariableId(v)) return t.markVariableId(v);
+      if (typeof v === "number") {
+        if (range) t.validRange(v, range.from, range.to);
+        return t.validId(v);
+      }
+      throw new Error("対応していない型が指定されました");
+    });
+
+export const argCharacterIdWithPreset = createPresetArg(CHARACTER);
 
 export const argIntOrVariableId = (v: number | VariableId) =>
   arg(v, (v, t) => (t.isVariableId(v) ? t.markVariableId(v) : v));
+
+export const argActorIdWithPreset = createPresetArgWithVariableId(ACTOR_MEMBER);
+
+export const argEnemyIndexWithPreset =
+  createPresetArgWithVariableId(ENEMY_MEMBER);
+export const argEnemyIndexWithPresetAndVariableId =
+  createPresetArgWithVariableId(ENEMY_MEMBER, { from: 1, to: 8 });

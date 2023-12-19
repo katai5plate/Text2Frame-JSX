@@ -1,4 +1,4 @@
-import { CHARACTER_ID_WORD, TIMER_MODE, VARIABLE_OPERATOR } from "../constants";
+import { CHARACTER, TIMER_MODE, VARIABLE_OPERATOR } from "../constants";
 import { C, FromTo, SelfSwitchName, SwitchId } from "../type";
 import {
   arg,
@@ -6,7 +6,6 @@ import {
   argEnemyIndex,
   argId,
   argInt,
-  join,
   tag,
 } from "../validate";
 
@@ -66,13 +65,11 @@ interface Data {
       TP: (id: number) => string;
     };
     character: {
-      mapX: (characterId: keyof typeof CHARACTER_ID_WORD | number) => string;
-      mapY: (characterId: keyof typeof CHARACTER_ID_WORD | number) => string;
-      direction: (
-        characterId: keyof typeof CHARACTER_ID_WORD | number
-      ) => string;
-      screenX: (characterId: keyof typeof CHARACTER_ID_WORD | number) => string;
-      screenY: (characterId: keyof typeof CHARACTER_ID_WORD | number) => string;
+      mapX: (characterId: keyof typeof CHARACTER | number) => string;
+      mapY: (characterId: keyof typeof CHARACTER | number) => string;
+      direction: (characterId: keyof typeof CHARACTER | number) => string;
+      screenX: (characterId: keyof typeof CHARACTER | number) => string;
+      screenY: (characterId: keyof typeof CHARACTER | number) => string;
     };
     last: {
       usedSkillId: () => string;
@@ -178,23 +175,23 @@ export const Variable: C<{
           TP: (index: number) => `GameData[Enemy][TP][${argEnemyIndex(index)}]`,
         },
         character: {
-          mapX: (characterId: keyof typeof CHARACTER_ID_WORD | number) =>
+          mapX: (characterId: keyof typeof CHARACTER | number) =>
             `GameData[Character][${argCharacterIdWithPreset(
               characterId
             )}][MapX]`,
-          mapY: (characterId: keyof typeof CHARACTER_ID_WORD | number) =>
+          mapY: (characterId: keyof typeof CHARACTER | number) =>
             `GameData[Character][${argCharacterIdWithPreset(
               characterId
             )}][MapY]`,
-          direction: (characterId: keyof typeof CHARACTER_ID_WORD | number) =>
+          direction: (characterId: keyof typeof CHARACTER | number) =>
             `GameData[Character][${argCharacterIdWithPreset(
               characterId
             )}][Direction]`,
-          screenX: (characterId: keyof typeof CHARACTER_ID_WORD | number) =>
+          screenX: (characterId: keyof typeof CHARACTER | number) =>
             `GameData[Character][${argCharacterIdWithPreset(
               characterId
             )}][ScreenX]`,
-          screenY: (characterId: keyof typeof CHARACTER_ID_WORD | number) =>
+          screenY: (characterId: keyof typeof CHARACTER | number) =>
             `GameData[Character][${argCharacterIdWithPreset(
               characterId
             )}][ScreenY]`,

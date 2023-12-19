@@ -70,7 +70,14 @@ movement
   <ChangeBlendMode: Normal|Additive|Multiply|Screen>
   <McPlaySe: 名称, 音量, ピッチ, 位相>
   <McScript: ここにJS>
-  <MoveDown|MoveLeft|MoveRight|MoveUp|MoveLowerLeft|MoveLowerRight|MoveUpperLeft|MoveUpperRight|MoveAtRandom|MoveTowardPlayer|MoveAwayFromPlayer|OneStepForward|OneStepBackward|TurnDown|TurnLeft|TurnRight|TurnUp|Turn90Right|Turn90Left|Turn180|Turn90RightorLeft|TurnAtRandom|TurnTowardPlayer|TurnAwayFromPlayer|WalkingAnimationOn|WalkingAnimationOff|SteppingAnimationOn|SteppingAnimationOff|DirectionFixOn|DirectionFixOff|ThroughOn|ThroughOff|TransparentOn|TransparentOff>
+  <MoveDown|MoveLeft|MoveRight|MoveUp|MoveLowerLeft|MoveLowerRight|MoveUpperLeft|MoveUpperRight|MoveAtRandom|MoveTowardPlayer|MoveAwayFromPlayer>
+  <OneStepForward|OneStepBackward>
+  <TurnDown|TurnLeft|TurnRight|TurnUp|TurnAtRandom|TurnTowardPlayer|TurnAwayFromPlayer|Turn90Right|Turn90Left|Turn180|Turn90RightorLeft>
+  <WalkingAnimationOn|WalkingAnimationOff>
+  <SteppingAnimationOn|SteppingAnimationOff>
+  <DirectionFixOn|DirectionFixOff>
+  <ThroughOn|ThroughOff>
+  <TransparentOn|TransparentOff>
 <GetOnOffVehicle>
 
 character
@@ -94,9 +101,6 @@ picture
   ColorTone[R][G][B][K]>|Normal|Dark|Sepia|Sunset|Night
   整数指定でデュレーション時間
 <ErasePicture: ID>
-
-wait
-<Wait: 整数>
 
 screen
 <FadeOut|FadeIn>
@@ -153,15 +157,17 @@ battle
 <ForceAction: 1-8|Actor[ID], ID, Last Target|Random|Index 1-8>
 <AbortBattle>
 
-script
-<script>
+interpreter
+<Wait: 整数>
+<Script>
 処理させたいスクリプト
-</script>
+</Script>
 <PluginCommand: MVプラグインコマンド文字列>
 <PluginCommandMZ: 名称, 関数名, コマンド名, ...引数名[値]>
 
 
 export const Component: C<{}> = ({}) => `<: ${[].join()}>`;
+export const Component: C<{}> = ({}) => tag("", [])
 
 https://github.com/yktsr/Text2Frame-MV/wiki/テキストファイルの書き方
 https://github.com/yktsr/Text2Frame-MV/wiki/追加機能(その他イベントコマンドの組み込み)

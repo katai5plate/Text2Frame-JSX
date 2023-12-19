@@ -1,12 +1,12 @@
 import { C, ReactElementObject } from "../type";
-import { argId, join, tag } from "../validate";
+import { argId, joinSkip, tag } from "../validate";
 
 export const Check: C<{
   condition: string;
   then: ReactElementObject;
   otherwise?: ReactElementObject;
 }> = ({ condition, then, otherwise }) =>
-  join("\n", [
+  joinSkip("\n", [
     tag("If", ["Script", condition]),
     then,
     ...(otherwise ? [tag("Else"), otherwise] : []),
@@ -14,7 +14,7 @@ export const Check: C<{
   ]);
 
 export const Loop: C<{ children: ReactElementObject }> = ({ children }) =>
-  join("\n", [tag("Loop"), children, tag("RepeatAbove")]);
+  joinSkip("\n", [tag("Loop"), children, tag("RepeatAbove")]);
 export const LoopBreak: C = () => tag("BreakLoop");
 export const BreakLoop = LoopBreak;
 
@@ -28,5 +28,5 @@ export const Goto: C<{ name: string }> = ({ name }) =>
   tag("JumpToLabel", [name]);
 export const JumpToLabel = Goto;
 
-export const Comment: C<{ children: string | string[] }> = ({ children }) =>
-  tag("Comment", undefined, children);
+export const Comment: C<{ text: string[] }> = ({ text }) =>
+  tag("Comment", undefined, text);

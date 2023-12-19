@@ -1,4 +1,3 @@
-import React from "react";
 import {
   CHOICES_CANCEL,
   CHOICES_INIT,
@@ -8,7 +7,7 @@ import {
   WINDOW_POSITION_VERTICAL,
 } from "../constants";
 import { C, ReactElementObject, VariableId } from "../type";
-import { arg, join, tag } from "../validate";
+import { arg, joinSkip, tag } from "../validate";
 
 export const Message: C<{ children: string | string[] }> = ({ children }) =>
   Array.isArray(children) ? children.join("\n") : children;
@@ -20,7 +19,7 @@ export const Window: C<{
   face?: { name: string; index: number };
   name?: string;
 }> = ({ face, position, background, name }) =>
-  join("\n", [
+  joinSkip("\n", [
     background && tag("Background", [background]),
     position && tag("WindowPosition", [position]),
     face &&
@@ -33,10 +32,10 @@ export const Window: C<{
 const ChoicesWhen: C<{
   name: string;
   children?: ReactElementObject;
-}> = ({ name, children }) => join("\n", [tag("When", [name]), children]);
+}> = ({ name, children }) => joinSkip("\n", [tag("When", [name]), children]);
 const ChoicesCancel: C<{
   children: ReactElementObject;
-}> = ({ children }) => join("\n", [tag("WhenCancel"), children]);
+}> = ({ children }) => joinSkip("\n", [tag("WhenCancel"), children]);
 type ChoiceWhenElement =
   | ReturnType<typeof ChoicesWhen>
   | ReturnType<typeof ChoicesCancel>;
@@ -47,7 +46,7 @@ const ShowChoices: C<{
   cancel?: keyof typeof CHOICES_CANCEL | number;
   children: ChoiceWhenElement | ChoiceWhenElement[];
 }> = ({ background, position, init, cancel, children }) =>
-  join("\n", [
+  joinSkip("\n", [
     tag("ShowChoices", [
       background,
       position,
@@ -94,6 +93,6 @@ export const SelectItem: C<{
 export const ScrollingText: C<{
   speed?: number;
   noSkip?: boolean;
-  children: string | string[];
-}> = ({ speed = 2, noSkip, children }) =>
-  tag("ScrollingText", [speed, noSkip], children);
+  text: string[];
+}> = ({ speed = 2, noSkip, text }) =>
+  tag("ScrollingText", [speed, noSkip], text);
