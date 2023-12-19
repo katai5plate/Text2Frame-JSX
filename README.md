@@ -2,6 +2,12 @@
 
 [Text2Frame-MV](https://github.com/yktsr/Text2Frame-MV) を JSX で書く試み
 
+## 注意！
+
+- このプロジェクトは実験的なものです。
+- 更新は終了しています。なので、試験的に使う以外は使用しないでください。
+- 後継リポジトリは [Text2Frame-JS](https://github.com/katai5plate/Text2Frame-JS) です。
+
 ## 使い方
 
 ```
