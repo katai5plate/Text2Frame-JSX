@@ -6,7 +6,7 @@ const Check = ({ condition, then, otherwise }) => (0, validate_1.joinSkip)("\n",
     (0, validate_1.tag)("If", ["Script", condition]),
     then,
     ...(otherwise ? [(0, validate_1.tag)("Else"), otherwise] : []),
-    "<End>",
+    (0, validate_1.tag)("End"),
 ]);
 exports.Check = Check;
 const Loop = ({ children }) => (0, validate_1.joinSkip)("\n", [(0, validate_1.tag)("Loop"), children, (0, validate_1.tag)("RepeatAbove")]);

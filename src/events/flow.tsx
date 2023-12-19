@@ -10,7 +10,7 @@ export const Check: C<{
     tag("If", ["Script", condition]),
     then,
     ...(otherwise ? [tag("Else"), otherwise] : []),
-    "<End>",
+    tag("End"),
   ]);
 
 export const Loop: C<{ children: ReactElementObject }> = ({ children }) =>

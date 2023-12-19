@@ -513,7 +513,7 @@ var Check = function Check(_ref) {
   var condition = _ref.condition,
     then = _ref.then,
     otherwise = _ref.otherwise;
-  return (0,_validate__WEBPACK_IMPORTED_MODULE_0__.joinSkip)("\n", [(0,_validate__WEBPACK_IMPORTED_MODULE_0__.tag)("If", ["Script", condition]), then].concat(_toConsumableArray(otherwise ? [(0,_validate__WEBPACK_IMPORTED_MODULE_0__.tag)("Else"), otherwise] : []), ["<End>"]));
+  return (0,_validate__WEBPACK_IMPORTED_MODULE_0__.joinSkip)("\n", [(0,_validate__WEBPACK_IMPORTED_MODULE_0__.tag)("If", ["Script", condition]), then].concat(_toConsumableArray(otherwise ? [(0,_validate__WEBPACK_IMPORTED_MODULE_0__.tag)("Else"), otherwise] : []), [(0,_validate__WEBPACK_IMPORTED_MODULE_0__.tag)("End")]));
 };
 var Loop = function Loop(_ref2) {
   var children = _ref2.children;

@@ -48,6 +48,32 @@ console.log(list);
 //   { code: 101, indent: 0, parameters: [ '', 0, 0, 2, 'ブライアン' ] },
 //   { code: 401, indent: 0, parameters: [ 'そうだな' ] }
 // ]
+
+const simpleParse = (arr) => arr.join("\n");
+
+console.log(
+  simpleParse([
+    events.message.Window({ name: "アレックス" }),
+    "暇だなー",
+    events.message.Window({ name: "ブライアン" }),
+    "そうだな",
+    events.flow.Check({
+      condition: "$gameSwitches.value(10)",
+      then: simpleParse([
+        events.message.Window({ name: "ぬくりあ" }),
+        "めでてえｗｗｗｗｗｗｗ",
+      ]),
+    }),
+  ])
+);
+// <Name: アレックス>
+// 暇だなー
+// <Name: ブライアン>
+// そうだな
+// <If: Script, $gameSwitches.value(10)>
+// <Name: ぬくりあ>
+// めでてえｗｗｗｗｗｗｗ
+// <End>
 ```
 
 ### 実行
