@@ -22,6 +22,7 @@
   "dependencies": {
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "Text2Frame-JSX": "github:katai5plate/Text2Frame-JSX",
     "Text2Frame-MV": "github:yktsr/Text2Frame-MV#117-forlib"
   },
   "devDependencies": {

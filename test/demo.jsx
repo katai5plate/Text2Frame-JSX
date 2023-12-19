@@ -1,4 +1,5 @@
 import React from "react";
+// import { parse, events } from "Text2Frame-JSX";
 import { parse, events } from "../dist";
 /** @type {import("Text2Frame-MV/Text2Frame.mjs")} */
 const { convert } = require("Text2Frame-MV");
