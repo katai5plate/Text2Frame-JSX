@@ -5,7 +5,8 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
-    "build": "rimraf dist && tsc && webpack --mode development"
+    "build": "rimraf dist && tsc && webpack --mode development",
+    "update-tf": "rimraf node_modules/Text2Frame-MV && rimraf node_modules/Text2Frame-JSX && npm i"
   },
   "repository": {
     "type": "git",

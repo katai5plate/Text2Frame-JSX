@@ -5,7 +5,7 @@
 ## 使い方
 
 ```
-npm i react react-dom yktsr/Text2Frame-MV#117-forlib
+npm i react react-dom yktsr/Text2Frame-MV#117-forlib katai5plate/Text2Frame-JSX
 npm i -D @babel/core @babel/node @babel/preset-env @babel/preset-react
 ```
 
