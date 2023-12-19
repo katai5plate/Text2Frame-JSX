@@ -1,6 +1,6 @@
 import { BLEND_MODE, COLOR_TONE, EASING, PICTURE_ORIGIN } from "../constants";
 import { C, Color4, DirectOrVariables } from "../type";
-import { arg, argId, argPreset, argRange, joinSkip, tag } from "../validate";
+import { arg, argPreset, argRange, joinSkip, tag } from "../validate";
 
 export const ShowPicture: C<{
   id: number;

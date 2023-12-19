@@ -1,11 +1,14 @@
 const path = require("path");
 
 module.exports = {
-  entry: "./src/index.tsx",
+  entry: "./src/index.ts",
   output: {
     filename: "index.js",
     path: path.resolve(__dirname, "dist"),
+    libraryTarget: "umd",
+    globalObject: "this",
   },
+  devtool: "source-map",
   module: {
     rules: [
       {

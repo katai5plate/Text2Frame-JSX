@@ -1,5 +1,4 @@
 import {
-  ACTION_TARGET,
   BLEND_MODE,
   CHARACTER,
   CHARACTER_FREQ,
@@ -17,8 +16,6 @@ import {
 import {
   ArgValue,
   C,
-  CreaseOperator,
-  JSXObject,
   MapPosition,
   DirectOrVariables,
   Sound,
@@ -26,20 +23,13 @@ import {
 } from "../type";
 import {
   arg,
-  argEnemyIndex,
-  argEnemyIndexWithPreset,
-  argEnemyIndexWithPresetAndVariableId,
   argId,
   argInt,
-  argIntOrVariableId,
   argPreset,
   argRange,
   joinSkip,
   tag,
 } from "../validate";
-
-const argMap = (mode: DirectOrVariables, id: number, x: number, y: number) =>
-  `${mode === "DIRECT" ? "Direct" : "WithVariables"}[${id}][${x}][${y}]`;
 
 export const TransferPlayer: C<{
   mode: DirectOrVariables;
